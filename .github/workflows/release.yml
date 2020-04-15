@@ -26,12 +26,16 @@ jobs:
         python -m pip install --upgrade pip
         pip install scrapy
  
-    - name: Get GithubStargazers and upload
+    - name: Get GithubStargazers
       run: |
         rm -rf starers.txt
         scrapy crawl BilibiliDown
-        cur_date="date +%Y-%m-%d"
-        upload_path="https://api.github.com/repos/nICEnnnnnnnLee/GithubStargazers/contents/BilibiliDown/${echo $cur_date}.txt"
+            
+    - name: Upload GithubStargazers
+      run: |
+        cur_date=$(date "+%Y-%m-%d")
+        upload_path="https://api.github.com/repos/nICEnnnnnnnLee/GithubStargazers/contents/BilibiliDown/$cur_date.txt"
         echo upload_path
         java -jar tool/FileUploadTool.jar $upload_path starers.txt ${{ secrets.GITHUB_TOKEN }}
+
 
