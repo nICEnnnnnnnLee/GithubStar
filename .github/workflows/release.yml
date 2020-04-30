@@ -11,6 +11,9 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        repo: [BilibiliDown, BilibiliLiveRecorder]
    
     steps:
     - uses: actions/checkout@v2
@@ -31,12 +34,12 @@ jobs:
     - name: Get GithubStargazers
       run: |
         rm -rf starers.txt
-        scrapy crawl BilibiliDown
+        scrapy crawl ${{ matrix.repo }}
             
     - name: Upload GithubStargazers
       run: |
         cur_date=$(date "+%Y-%m-%d")
-        upload_path="https://api.github.com/repos/nICEnnnnnnnLee/GithubStargazers/contents/BilibiliDown/$cur_date.txt"
+        upload_path="https://api.github.com/repos/nICEnnnnnnnLee/GithubStargazers/contents/${{ matrix.repo }}/$cur_date.txt"
         echo upload_path
         java -jar tool/FileUploadTool.jar $upload_path starers.txt ${{ secrets.AUTH_TOKEN }}
 
